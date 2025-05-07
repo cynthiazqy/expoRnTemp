@@ -1,5 +1,12 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
+import {
+	Alert,
+	Button,
+	Platform,
+	StyleSheet,
+	TouchableHighlight,
+} from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -7,6 +14,24 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 export default function HomeScreen() {
+	const router = useRouter();
+
+	const onPressButton = () => {
+		Alert.alert('You tapped the button!');
+		// router.push('/profile');
+		router.push({
+			pathname: '/profile',
+			params: {
+				userId: '123test',
+			},
+		});
+	};
+
+	const onLongPressButton = () => {
+		Alert.alert('You long-pressed the button!');
+		router.replace('/explore');
+	};
+
 	return (
 		<ParallaxScrollView
 			headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -17,7 +42,7 @@ export default function HomeScreen() {
 				/>
 			}>
 			<ThemedView style={styles.titleContainer}>
-				<ThemedText type="title">Welcome888!</ThemedText>
+				<ThemedText type="title">Welcome!</ThemedText>
 				<HelloWave />
 			</ThemedView>
 			<ThemedView style={styles.stepContainer}>
@@ -43,17 +68,27 @@ export default function HomeScreen() {
 				</ThemedText>
 			</ThemedView>
 			<ThemedView style={styles.stepContainer}>
-				<ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-				<ThemedText>
-					{`When you're ready, run `}
-					<ThemedText type="defaultSemiBold">
-						npm run reset-project
-					</ThemedText>{' '}
-					to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{' '}
-					directory. This will move the current{' '}
-					<ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-					<ThemedText type="defaultSemiBold">app-example</ThemedText>.
-				</ThemedText>
+				<ThemedText type="subtitle">Step 3: navigation to</ThemedText>
+				<TouchableHighlight
+					onPress={onPressButton}
+					onLongPress={onLongPressButton}
+					underlayColor="white">
+					<ThemedView style={styles.button}>
+						<ThemedText type="link">jump to other page</ThemedText>
+					</ThemedView>
+				</TouchableHighlight>
+				<Button
+					title="open modal"
+					onPress={() =>
+						router.push({
+							pathname: '/profile',
+							params: {
+								userId: 'test333-new',
+								data: 'some data',
+							},
+						})
+					}
+				/>
 			</ThemedView>
 		</ParallaxScrollView>
 	);
@@ -75,5 +110,10 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		left: 0,
 		position: 'absolute',
+	},
+	button: {
+		alignItems: 'center',
+		backgroundColor: '#DDD',
+		padding: 10,
 	},
 });
